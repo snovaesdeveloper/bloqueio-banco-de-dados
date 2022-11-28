@@ -67,16 +67,20 @@ public class UtilDb {
 	
 	//Sem Lock
 	//Atualiza em varias transacoes sem lock
-	public void update(EntityManager em, Pokemon pok, int amount) {
-		String name = pok.getName();
-		for(int i = 1; i<amount +1; i++) {
-			 
-			Pokemon pokAux = em.find(Pokemon.class, i);
-			pokAux.setName(name + i);
-			this.salvar(em, pokAux);
-			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
-		}
-	}
+//	public void update(EntityManager em, Pokemon pok, int amount) {
+//		String name = pok.getName();
+//		for(int i = 1; i<amount +1; i++) {
+//			 
+//			Pokemon pokAux = em.find(Pokemon.class, i);
+//			pokAux.setName(name + i);
+//			this.salvar(em, pokAux);
+//			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+//			
+//			//Fechar Conexão para evitar gargalo nas conexões
+//			em.close();
+//	       
+//		}
+//	}
 	public void update3(Pokemon pok, int amount) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
@@ -97,31 +101,25 @@ public class UtilDb {
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			//HibernateSessio
+			
 			EntityManager em = emf.createEntityManager();
 			Pokemon pokAux = em.find(Pokemon.class, i);
 			String nameAux = "";
 			nameAux = name + i;
-			//nameAux = "AAAAAAhhhhh";
+			
 			pokAux.setName(nameAux);
-//			if(!em.getTransaction().isActive())
-//		        em.getTransaction().begin();
-//			em.persist(pokAux);
-//			em.getTransaction().commit();
-//			em.close();
-//			
+
+		
 			em.getTransaction().begin();
 			
 			em.persist(pokAux);
 			//System.out.println("Salvando sem lock: "+ nameAux +"\n");
 			em.getTransaction().commit();
-	        // flush em - save to DB
-	        //em.flush();
-			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
 			
-			
+			em.close();
 			
 		});
+		emf.close();
 	}
 	//com lock
 	public void updateExclusive(Pokemon pok, int amount) {
@@ -130,17 +128,9 @@ public class UtilDb {
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			//HibernateSessio
 			EntityManager em = emf.createEntityManager();
-			//Pokemon pokAux = em.find(Pokemon.class, i, );
 			String nameAux = "";
 			
-//			if(!em.getTransaction().isActive())
-//		        em.getTransaction().begin();
-//			em.persist(pokAux);
-//			em.getTransaction().commit();
-//			em.close();
-//			
 			em.getTransaction().begin();
 			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_WRITE);
 			nameAux = name + i;
@@ -149,30 +139,28 @@ public class UtilDb {
 			em.persist(pokAux);
 			//System.out.println("Salvando Exclusivo: "+ nameAux +"\n");
 			em.getTransaction().commit();
-	        // flush em - save to DB
-	        //em.flush();
+	       
 			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+			
+			//Fechar Conexão para evitar gargalo nas conexões
+			em.close();
+	       
 		});
+		emf.close();
 	}
 	
 	//Pode isso? (escrita pedir shared)
 	public void updateShared(Pokemon pok, int amount) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
-		//Pokemon pokAux = pok;
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			//HibernateSessio
+		
 			EntityManager em = emf.createEntityManager();
-			//Pokemon pokAux = em.find(Pokemon.class, i, );
+		
 			String nameAux = "";
 			
-//			if(!em.getTransaction().isActive())
-//		        em.getTransaction().begin();
-//			em.persist(pokAux);
-//			em.getTransaction().commit();
-//			em.close();
-//			
+
 			em.getTransaction().begin();
 			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
 			nameAux = name + i;
@@ -183,13 +171,17 @@ public class UtilDb {
 				
 			}
 			
-			
 			//System.out.println("Salvando SHARED: "+ nameAux +"\n");
 			em.getTransaction().commit();
-	        // flush em - save to DB
-	        //em.flush();
+	        
 			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+			
+			//Fechar Conexão para evitar gargalo nas conexões
+			em.close();
+	       
 		});
+		
+		emf.close();
 	}
 	//Sem lock
 	public void busca(Pokemon pok, int amount) {
@@ -198,28 +190,25 @@ public class UtilDb {
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			//HibernateSessio
+
 			EntityManager em = emf.createEntityManager();
-			//Pokemon pokAux = em.find(Pokemon.class, i, );
+			
 			String nameAux = "";
 			
-
 			em.getTransaction().begin();
-			//Query query = em.createQuery("from Pokemon where id = :id");
-			//query.setParameter("id", i);
+			
 			Pokemon pokAux = em.find(Pokemon.class, i);
 
-			//em.lock(pokAux, LockModeType.PESSIMISTIC_READ);
-			//query.setLockMode(LockModeType);
-			//query.getResultList();
-			//Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
-			//em.persist(pokAux);
 			//System.out.println("Lendo sem lock: "+ pokAux.getName() +"\n");
 			em.getTransaction().commit();
-	        // flush em - save to DB
-	        //em.flush();
+	        
 			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+			
+			//Fechar Conexão para evitar gargalo nas conexões
+			em.close();
+	       
 		});
+		emf.close();
 	}
 	//Com lock
 	public void buscaShared(Pokemon pok, int amount) {
@@ -228,28 +217,29 @@ public class UtilDb {
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			//HibernateSessio
+			
 			EntityManager em = emf.createEntityManager();
-			//Pokemon pokAux = em.find(Pokemon.class, i, );
+			
 			String nameAux = "";
 			
 
 			em.getTransaction().begin();
-			//Query query = em.createQuery("from Pokemon where id = :id");
-			//query.setParameter("id", i);
+		
 			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
 
 			
-			//query.setLockMode(LockModeType);
-			//query.getResultList();
-			//Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
-			//em.persist(pokAux);
-			//System.out.println("Lendo Compartilhado: "+ pokAux.getName() +"\n");
+			
 			em.getTransaction().commit();
-	        // flush em - save to DB
-	        //em.flush();
+			
+			
+	        
 			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+			
+			//Fechar Conexão para evitar gargalo nas conexões
+			em.close();
+	       
 		});
+		emf.close();
 	}
 	
 	//Teste sem o salvar()!!funcionando paralelo!!
@@ -318,7 +308,7 @@ public class UtilDb {
 		}
 	}
 	
-	
+
 		
 	//Com lock
 	//Shared

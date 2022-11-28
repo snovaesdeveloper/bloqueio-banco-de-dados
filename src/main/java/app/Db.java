@@ -155,184 +155,326 @@ public class Db {
 	    return duration;
 		
 	}
-
 	
-	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {
-		ArrayList<Integer> listaInt = new ArrayList<Integer>();
-		MyCounter counter = new MyCounter();
+	public static void executeDropTable(String tableName){
 		
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-		EntityManager em = emf.createEntityManager();
-		
-		UtilDb utilDb = new UtilDb();
-		
-		final Pokemon pok = new Pokemon(null, "Ivysaur");
-		final Pokemon pok1 = new Pokemon(null, "Venusaur");
-		
-		//Na verdade 1000 transações são 500 + 500 e não 1 até 499 e 500 até 1000
-		//Então só precisa de 500 para 100 transações por exemplo
-		
-		
-		long startTime = System.nanoTime();
-		
-		long endTime = System.nanoTime();
-
-		long duration = (endTime - startTime);
-		
-	    String csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\test.csv";
-
-		int Threads = 2;
-	    
-		ArrayList<Long> timesExp1 = new ArrayList<Long>();
-		
-		ArrayList<Long> timesExp2 = new ArrayList<Long>();
-		
-		ArrayList<Long> timesExp3 = new ArrayList<Long>();
-		
-		ArrayList<Long> timesExp4 = new ArrayList<Long>();
-		
-		ArrayList<Long> times = new ArrayList<Long>();
-		
-		ArrayList<String> timeS = new ArrayList<String>();
-		
-		List<String[]> listDataSet = new ArrayList<>();
-		
-		
-		Integer transacCount = 1000;
-		//Popular a base
-		utilDb.populate(em, pok, transacCount/2);
-		
-		startTime = System.nanoTime();
-		
-	    //times.add(expPasso1(utilDb, pok1, transacCount));
-	    //times.add(expPasso2(utilDb, pok1, transacCount));
-	    //times.add(expPasso3(utilDb, pok1, transacCount));
-	    //times.add(expPasso4(utilDb, pok1, transacCount));
-	    
-	    
-	    endTime = System.nanoTime();
-	    duration = (endTime - startTime);
-	    //duration = expPasso1(utilDb, pok1, transacCount);
-	    System.out.println("Duration: "+duration);
-	    
-	    
-	    //CSV things
-	    //Um CSV para cada exp
-	    //System.out.println("Times:" + times);
-	    String[] header = {"1000", "10000", "100000"};
-	    
-	    //String[] header = {"expPasso1", "expPasso2", "expPasso3", "expPasso4"};
-	    
-//	    listDataSet.add(header);
-//	    //Long[] timesRecord = {}
-//	    String[] timesRecord = new String[times.size()];
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+//		EntityManager em1 = emf.createEntityManager();
+//
+//		System.out.println("Dropando: " + tableName);
+//	    //String query = "DROP TABLE IF EXISTS pokemon";
+//		//String query = " DELETE FROM `pokemon` WHERE `pokemon`.`id` = 1;";
+//		String query = " DELETE FROM `pokemon` ;";
+//
+//	    em1.getTransaction().begin();
+//	    em1.createNativeQuery(query).executeUpdate();
 //	    
-//	    
-//	    
-//	    
-//	    //listDataSet.add(header);
-//	    
-//	    
-//	    for(int i = 0; i < times.size(); i++) {
-//	    	timesRecord[i] = times.get(i).toString();
-//	    }
-//	    
-//	    listDataSet.add(timesRecord);
-//	    
-//	    utilDb.saveToCsv(listDataSet, csvPath);
-	    
-	    
-	    
-	    //Executar os experimentos para tirar a media depois nVezes
-	    int nVezes = 10;
-	    //Exp1
-	    //1000
-	    String expN = "exp1";
-	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+expN+".csv";
-	    String[] headerAux = {"1000", "10000", "100000"};
-	    listDataSet.add(headerAux);
-	    
-	    utilDb.saveToCsv(listDataSet, csvPath, true);
-	    
-	    transacCount = 1000;
+//	    em1.getTransaction().commit();
+//	    em1.close();
+//	    emf.close();
+	}
+	//Retorna a media dos experimentos
+	public static double avgExp1(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+		ArrayList<Long> timesExp = new ArrayList<Long>();
+		executeDropTable("pokemon");
 	    utilDb.populate(em, pok, transacCount/2);
-	    TimeUnit.SECONDS.sleep(15);
+	    
 	    for(int i= 0; i < 10; i++) {
 	    	
-	    	timesExp1.add(expPasso1(utilDb, pok1, transacCount));
-	    	
-	    	TimeUnit.SECONDS.sleep(5);
+	    	try {
+	    		
+				timesExp.add(expPasso1(utilDb, pok1, transacCount));
+				//TimeUnit.SECONDS.sleep(1);
+				
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				
+				e.printStackTrace();
+			}
 	    }
 	    
-	    String[] timesRecord = new String[times.size()];
-	    
-	    for(int i = 0; i < timesExp1.size(); i++) {
-	    	timesRecord[i] = timesExp1.get(i).toString();
-	    }
 	    //Tirar media
-	    Double avg = timesExp1.stream()
+	    Double avg = timesExp.stream()
         .mapToDouble(d -> d)
         .average()
         .orElse(0.0);
-	    //!!!!!!!!!!!
-	    //Dilema 
-	    //Calcular para por exemplo 1000 o exp1, exp2, exp3 e exp4 (Como feito da primeira vez (Com medias))
-	    //Sendo os arquivos 1000.csv, 10000.csv e 100000.csv.
-	    //#1000.csv
-	    //exp1, exp2, exp3 e exp4
-	    //123  ,  500,  432, 1337
+	    return avg;
 	    
-	    //Ou 
-	    //Para cada exp1 fazer um csv com os tempos para cada 1000, 10000, 100000.
-	    //Sendo os arquivos exp1.csv, exp2.csv, exp3.csv, exp4.csv.
-	    //#exp1
-	    //1000, 10000, 100000
-	    //123,  4324,   5433
+	}
+	
+	public static double avgExp2(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+		ArrayList<Long> timesExp = new ArrayList<Long>();
+		executeDropTable("pokemon");
+	    utilDb.populate(em, pok, transacCount/2);
 	    
+	    for(int i= 0; i < 10; i++) {
+	    	
+	    	try {
+	    		
+				timesExp.add(expPasso2(utilDb, pok1, transacCount));
+				//TimeUnit.SECONDS.sleep(1);
+				
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				
+				e.printStackTrace();
+			}
+	    }
 	    
-	    //!!!!!!!!!!!
-	    timeS.add(avg.toString());
-    	//listDataSet.add();
-    	utilDb.saveToCsv(listDataSet, csvPath, true);
+	    //Tirar media
+	    Double avg = timesExp.stream()
+        .mapToDouble(d -> d)
+        .average()
+        .orElse(0.0);
+	    return avg;
 	    
-	    //timesExp1.add(expPasso1(utilDb, pok1, transacCount));
+	}
+	
+	public static double avgExp3(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+		ArrayList<Long> timesExp = new ArrayList<Long>();
+		executeDropTable("pokemon");
+	    utilDb.populate(em, pok, transacCount/2);
 	    
-	    //TimeUnit.SECONDS.sleep(60);
+	    for(int i= 0; i < 10; i++) {
+	    	
+	    	try {
+	    		
+				timesExp.add(expPasso3(utilDb, pok1, transacCount));
+				//TimeUnit.SECONDS.sleep(1);
+				
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				
+				e.printStackTrace();
+			}
+	    }
 	    
-	    //10000
-	    transacCount = 10000;
+	    //Tirar media
+	    Double avg = timesExp.stream()
+        .mapToDouble(d -> d)
+        .average()
+        .orElse(0.0);
+	    return avg;
 	    
-	    //TimeUnit.SECONDS.sleep(60);
-	    //100000
-	    transacCount = 100000;
+	}
+	
+	public static double avgExp4(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+		ArrayList<Long> timesExp = new ArrayList<Long>();
+		executeDropTable("pokemon");
+	    utilDb.populate(em, pok, transacCount/2);
 	    
-	    //TimeUnit.SECONDS.sleep(60);
+	    for(int i= 0; i < 10; i++) {
+	    	
+	    	try {
+	    		
+				timesExp.add(expPasso4(utilDb, pok1, transacCount));
+				
+				
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				
+				e.printStackTrace();
+			}
+	    }
 	    
+	    //Tirar media
+	    Double avg = timesExp.stream()
+        .mapToDouble(d -> d)
+        .average()
+        .orElse(0.0);
+	    return avg;
 	    
-	    
-	    
-	    
-	    //Exp2
-	    //1000
-	    transacCount = 1000;
-	    //10000
-	    transacCount = 10000;
-	    //100000
-	    transacCount = 100000;
-	    
-	    //Exp3
-	    transacCount = 1000;
-	    //10000
-	    transacCount = 10000;
-	    //100000
-	    transacCount = 100000;
-	    
-	    //Exp4
-	    transacCount = 1000;
-	    //10000
-	    transacCount = 10000;
-	    //100000
-	    transacCount = 100000;
+	}
+
+
+
+
+	
+	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {
+//		ArrayList<Integer> listaInt = new ArrayList<Integer>();
+//		MyCounter counter = new MyCounter();
+//		
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+//	
+//		EntityManager em = emf.createEntityManager();
+//		
+//		UtilDb utilDb = new UtilDb();
+//		
+//		final Pokemon pok = new Pokemon(null, "Ivysaur");
+//		final Pokemon pok1 = new Pokemon(null, "Venusaur");
+//		
+//		//Na verdade 1000 transações são 500 + 500 e não 1 até 499 e 500 até 1000
+//		//Então só precisa de 500 para 100 transações por exemplo
+//		
+//		
+//		long startTime = System.nanoTime();
+//		
+//		long endTime = System.nanoTime();
+//
+//		long duration = (endTime - startTime);
+//		
+//	    String csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\test.csv";
+//
+//		int Threads = 2;
+//	    
+//		ArrayList<Long> timesExp1 = new ArrayList<Long>();
+//		
+//		ArrayList<Long> timesExp2 = new ArrayList<Long>();
+//		
+//		ArrayList<Long> timesExp3 = new ArrayList<Long>();
+//		
+//		ArrayList<Long> timesExp4 = new ArrayList<Long>();
+//		
+//		ArrayList<Long> times = new ArrayList<Long>();
+//		
+//		ArrayList<String> timeS = new ArrayList<String>();
+//		
+//		List<String[]> listDataSet = new ArrayList<>();
+//		
+//		
+//		Integer transacCount = 1000;
+//		//Popular a base
+//		utilDb.populate(em, pok, transacCount/2);
+//		
+//		startTime = System.nanoTime();
+//		
+//	    //times.add(expPasso1(utilDb, pok1, transacCount));
+//	    //times.add(expPasso2(utilDb, pok1, transacCount));
+//	    //times.add(expPasso3(utilDb, pok1, transacCount));
+//	    //times.add(expPasso4(utilDb, pok1, transacCount));
+//	    
+//	    
+//	    endTime = System.nanoTime();
+//	    duration = (endTime - startTime);
+//	    //duration = expPasso1(utilDb, pok1, transacCount);
+//	    System.out.println("Duration: "+duration);
+//	    
+//	    
+//	    //CSV things
+//	    //Um CSV para cada exp
+//	    //System.out.println("Times:" + times);
+//	    String[] header = {"1000", "10000", "100000"};
+//	    
+//	    //String[] header = {"expPasso1", "expPasso2", "expPasso3", "expPasso4"};
+//	    
+////	    listDataSet.add(header);
+////	    //Long[] timesRecord = {}
+////	    String[] timesRecord = new String[times.size()];
+////	    
+////	    
+////	    
+////	    
+////	    //listDataSet.add(header);
+////	    
+////	    
+////	    for(int i = 0; i < times.size(); i++) {
+////	    	timesRecord[i] = times.get(i).toString();
+////	    }
+////	    
+////	    listDataSet.add(timesRecord);
+////	    
+////	    utilDb.saveToCsv(listDataSet, csvPath);
+//	    
+//	    
+//	    
+//	    //Executar os experimentos para tirar a media depois nVezes
+//	    int nVezes = 10;
+//	    //Exp1
+//	    //1000
+//	    String expN = "exp1";
+//	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+expN+".csv";
+//	    String[] headerAux = {"1000", "10000", "100000"};
+//	    listDataSet.add(headerAux);
+//	    
+//	    utilDb.saveToCsv(listDataSet, csvPath, true);
+//	    
+//	    transacCount = 1000;
+//	    utilDb.populate(em, pok, transacCount/2);
+//	    TimeUnit.SECONDS.sleep(15);
+//	    for(int i= 0; i < 10; i++) {
+//	    	
+//	    	timesExp1.add(expPasso1(utilDb, pok1, transacCount));
+//	    	
+//	    	TimeUnit.SECONDS.sleep(5);
+//	    }
+//	    
+//	    String[] timesRecord = new String[timesExp1.size()];
+//	    
+//	    for(int i = 0; i < timesExp1.size(); i++) {
+//	    	timesRecord[i] = timesExp1.get(i).toString();
+//	    }
+//	    //Tirar media
+//	    Double avg = timesExp1.stream()
+//        .mapToDouble(d -> d)
+//        .average()
+//        .orElse(0.0);
+//	    //!!!!!!!!!!!
+//	    //Dilema 
+//	    //Calcular para por exemplo 1000 o exp1, exp2, exp3 e exp4 (Como feito da primeira vez (Com medias))
+//	    //Sendo os arquivos 1000.csv, 10000.csv e 100000.csv.
+//	    //#1000.csv
+//	    //exp1, exp2, exp3 e exp4
+//	    //123  ,  500,  432, 1337
+//	    
+//	    //Ou 
+//	    //Para cada exp1 fazer um csv com os tempos para cada 1000, 10000, 100000.
+//	    //Sendo os arquivos exp1.csv, exp2.csv, exp3.csv, exp4.csv.
+//	    //#exp1
+//	    //1000, 10000, 100000
+//	    //123,  4324,   5433
+//	    
+//	    
+//	    //!!!!!!!!!!!
+//	    timeS.add(avg.toString());
+//    	//listDataSet.add();
+//    	utilDb.saveToCsv(listDataSet, csvPath, true);
+//	    
+//	    //timesExp1.add(expPasso1(utilDb, pok1, transacCount));
+//	    
+//	    //TimeUnit.SECONDS.sleep(60);
+//	    
+//	    //10000
+//	    transacCount = 10000;
+//	    
+//	    //TimeUnit.SECONDS.sleep(60);
+//	    //100000
+//	    transacCount = 100000;
+//	    
+//	    //TimeUnit.SECONDS.sleep(60);
+//	    
+//	    
+//	    
+//	    
+//	    
+//	    //Exp2
+//	    //1000
+//	    transacCount = 1000;
+//	    //10000
+//	    transacCount = 10000;
+//	    //100000
+//	    transacCount = 100000;
+//	    
+//	    //Exp3
+//	    transacCount = 1000;
+//	    //10000
+//	    transacCount = 10000;
+//	    //100000
+//	    transacCount = 100000;
+//	    
+//	    //Exp4
+//	    transacCount = 1000;
+//	    //10000
+//	    transacCount = 10000;
+//	    //100000
+//	    transacCount = 100000;
 	    
 //	    String[] header = {"expPasso1", "expPasso2", "expPasso3", "expPasso4"};
 //	    listDataSet.add(header);
