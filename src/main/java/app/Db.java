@@ -24,7 +24,7 @@ import com.opencsv.CSVWriter;
 
 public class Db {
 	public static long expPasso1(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
-		int Threads = 2;
+		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
@@ -57,7 +57,7 @@ public class Db {
 	}
 	
 	public static long expPasso2(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
-		int Threads = 2;
+		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
@@ -90,7 +90,7 @@ public class Db {
 	}
 	
 	public static long expPasso3(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
-		int Threads = 2;
+		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
@@ -123,7 +123,7 @@ public class Db {
 	}
 	
 	public static long expPasso4(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
-		int Threads = 2;
+		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
@@ -158,26 +158,26 @@ public class Db {
 	
 	public static void executeDropTable(String tableName){
 		
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-//		EntityManager em1 = emf.createEntityManager();
-//
-//		System.out.println("Dropando: " + tableName);
-//	    //String query = "DROP TABLE IF EXISTS pokemon";
-//		//String query = " DELETE FROM `pokemon` WHERE `pokemon`.`id` = 1;";
-//		String query = " DELETE FROM `pokemon` ;";
-//
-//	    em1.getTransaction().begin();
-//	    em1.createNativeQuery(query).executeUpdate();
-//	    
-//	    em1.getTransaction().commit();
-//	    em1.close();
-//	    emf.close();
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+		EntityManager em1 = emf.createEntityManager();
+
+		System.out.println("Dropando: " + tableName);
+	    //String query = "DROP TABLE IF EXISTS pokemon";
+		//String query = " DELETE FROM `pokemon` WHERE `pokemon`.`id` = 1;";
+		String query = " DELETE FROM `"+ tableName+"` ;";
+
+	    em1.getTransaction().begin();
+	    em1.createNativeQuery(query).executeUpdate();
+	    
+	    em1.getTransaction().commit();
+	    em1.close();
+	    emf.close();
 	}
 	//Retorna a media dos experimentos
-	public static double avgExp1(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+	public static double avgExp1(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
-		executeDropTable("pokemon");
-	    utilDb.populate(em, pok, transacCount/2);
+		//executeDropTable("pokemon");
+	    //utilDb.populate(em, pok, transacCount/2);
 	    
 	    for(int i= 0; i < 10; i++) {
 	    	
@@ -204,10 +204,10 @@ public class Db {
 	    
 	}
 	
-	public static double avgExp2(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+	public static double avgExp2(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
-		executeDropTable("pokemon");
-	    utilDb.populate(em, pok, transacCount/2);
+		//executeDropTable("pokemon");
+	    //utilDb.populate(em, pok, transacCount/2);
 	    
 	    for(int i= 0; i < 10; i++) {
 	    	
@@ -234,10 +234,10 @@ public class Db {
 	    
 	}
 	
-	public static double avgExp3(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+	public static double avgExp3(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
-		executeDropTable("pokemon");
-	    utilDb.populate(em, pok, transacCount/2);
+		//executeDropTable("pokemon");
+	    //utilDb.populate(em, pok, transacCount/2);
 	    
 	    for(int i= 0; i < 10; i++) {
 	    	
@@ -264,10 +264,10 @@ public class Db {
 	    
 	}
 	
-	public static double avgExp4(int transacCount, UtilDb utilDb, EntityManager em, Pokemon pok, Pokemon pok1) {
+	public static double avgExp4(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
-		executeDropTable("pokemon");
-	    utilDb.populate(em, pok, transacCount/2);
+		//executeDropTable("pokemon");
+	    //utilDb.populate(em, pok, transacCount/2);
 	    
 	    for(int i= 0; i < 10; i++) {
 	    	
@@ -323,7 +323,7 @@ public class Db {
 //		
 //	    String csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\test.csv";
 //
-//		int Threads = 2;
+//		int Threads = 1;
 //	    
 //		ArrayList<Long> timesExp1 = new ArrayList<Long>();
 //		

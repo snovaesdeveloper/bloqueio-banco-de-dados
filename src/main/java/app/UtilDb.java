@@ -22,11 +22,15 @@ import com.opencsv.CSVWriter;
 
 
 public class UtilDb {
-	EntityManager em;
+	//EntityManager em;
+	private EntityManagerFactory emf; 
 	
 	
 	public UtilDb(){
 		
+	}
+	public UtilDb(EntityManagerFactory emf){
+		this.emf = emf;
 	}
 	
 	//Utils para converter para csv
@@ -81,28 +85,28 @@ public class UtilDb {
 //	       
 //		}
 //	}
-	public void update3(Pokemon pok, int amount) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-		String name = pok.getName();
-		for(int i = 1; i<amount +1; i++) {
-			//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-			EntityManager em = emf.createEntityManager();
-			 
-			Pokemon pokAux = em.find(Pokemon.class, i);
-			pokAux.setName(name + i);
-			this.salvar(em, pokAux);
-			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
-		}
-	}
+//	public void update3(Pokemon pok, int amount) {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+//		String name = pok.getName();
+//		for(int i = 1; i<amount +1; i++) {
+//			//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+//			EntityManager em = emf.createEntityManager();
+//			 
+//			Pokemon pokAux = em.find(Pokemon.class, i);
+//			pokAux.setName(name + i);
+//			this.salvar(em, pokAux);
+//			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+//		}
+//	}
 	//sem lock
 	public void update(Pokemon pok, int amount) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
 			
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = this.emf.createEntityManager();
 			Pokemon pokAux = em.find(Pokemon.class, i);
 			String nameAux = "";
 			nameAux = name + i;
@@ -119,16 +123,16 @@ public class UtilDb {
 			em.close();
 			
 		});
-		emf.close();
+		//emf.close();
 	}
 	//com lock
 	public void updateExclusive(Pokemon pok, int amount) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = this.emf.createEntityManager();
 			String nameAux = "";
 			
 			em.getTransaction().begin();
@@ -138,6 +142,7 @@ public class UtilDb {
 			pokAux.setName(nameAux);
 			em.persist(pokAux);
 			//System.out.println("Salvando Exclusivo: "+ nameAux +"\n");
+			
 			em.getTransaction().commit();
 	       
 			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
@@ -146,17 +151,18 @@ public class UtilDb {
 			em.close();
 	       
 		});
-		emf.close();
+		
+		//emf.close();
 	}
 	
 	//Pode isso? (escrita pedir shared)
 	public void updateShared(Pokemon pok, int amount) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
 		
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = this.emf.createEntityManager();
 		
 			String nameAux = "";
 			
@@ -181,19 +187,17 @@ public class UtilDb {
 	       
 		});
 		
-		emf.close();
+		//emf.close();
 	}
 	//Sem lock
 	public void busca(Pokemon pok, int amount) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-		String name = pok.getName();
-		
+		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
 
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = this.emf.createEntityManager();
 			
-			String nameAux = "";
+
 			
 			em.getTransaction().begin();
 			
@@ -208,19 +212,19 @@ public class UtilDb {
 			em.close();
 	       
 		});
-		emf.close();
+		//emf.close();
 	}
 	//Com lock
 	public void buscaShared(Pokemon pok, int amount) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
 			
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = this.emf.createEntityManager();
 			
-			String nameAux = "";
+			//String nameAux = "";
 			
 
 			em.getTransaction().begin();
@@ -239,51 +243,52 @@ public class UtilDb {
 			em.close();
 	       
 		});
-		emf.close();
+		//emf.close();
 	}
 	
 	//Teste sem o salvar()!!funcionando paralelo!!
-	@SuppressWarnings("unchecked")
-	public void update2(EntityManager em, Pokemon pok, int amount) {
-		String name = pok.getName();
-		//String nameAux = "";
-		//ArrayList<Integer> list = new ArrayList<>();
-		
-		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			//HibernateSessio
-			Pokemon pokAux = em.find(Pokemon.class, i);
-			String nameAux = "";
-			nameAux = name + i;
-			//nameAux = "AAAAAAhhhhh";
-			pokAux.setName(nameAux);
-//			if(!em.getTransaction().isActive())
-//		        em.getTransaction().begin();
-//			em.persist(pokAux);
-//			em.getTransaction().commit();
-//			em.close();
-//			
-			em.getTransaction().begin();
-			
-			em.persist(pokAux);
-			em.getTransaction().commit();
-	        // flush em - save to DB
-	        //em.flush();
-			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
-			
-			System.out.println("Salvando: "+ nameAux +"\n");
-			
-		});
-//		for(int i = 1; i<amount +1; i++) {
-//			
+//	@SuppressWarnings("unchecked")
+//	public void update2(EntityManager em, Pokemon pok, int amount) {
+//		String name = pok.getName();
+//		//String nameAux = "";
+//		//ArrayList<Integer> list = new ArrayList<>();
+//		
+//		IntStream.range(1,amount).boxed().parallel().forEach(i->{
+//			//HibernateSessio
 //			Pokemon pokAux = em.find(Pokemon.class, i);
-//			pokAux.setName(name + i);
+//			String nameAux = "";
+//			nameAux = name + i;
+//			//nameAux = "AAAAAAhhhhh";
+//			pokAux.setName(nameAux);
+////			if(!em.getTransaction().isActive())
+////		        em.getTransaction().begin();
+////			em.persist(pokAux);
+////			em.getTransaction().commit();
+////			em.close();
+////			
 //			em.getTransaction().begin();
-//			em.persist(pokAux);
-//			System.out.println("Salvando: "+ pokAux.getName()+"\n");
-//			em.getTransaction().commit();
 //			
-//		}
-	}
+//			em.persist(pokAux);
+//			em.getTransaction().commit();
+//	        // flush em - save to DB
+//	        //em.flush();
+//			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
+//			
+//			System.out.println("Salvando: "+ nameAux +"\n");
+//			
+//		});
+////		for(int i = 1; i<amount +1; i++) {
+////			
+////			Pokemon pokAux = em.find(Pokemon.class, i);
+////			pokAux.setName(name + i);
+////			em.getTransaction().begin();
+////			em.persist(pokAux);
+////			System.out.println("Salvando: "+ pokAux.getName()+"\n");
+////			em.getTransaction().commit();
+////			
+////		}
+//	}
+	
 	public void salvar2(EntityManager em, Integer i) {
 		em.getTransaction().begin();
 		Pokemon pokAux = em.find(Pokemon.class, i);

@@ -107,15 +107,15 @@ public class Main extends Db {
 	    transacCount = 1000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp1(transacCount, utilDb, pok, pok1));
 	    transacCount = 10000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp1(transacCount, utilDb, pok, pok1));
 	    transacCount = 100000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp1(transacCount, utilDb, pok, pok1));
 	    
 	    
 	    
@@ -145,15 +145,15 @@ public class Main extends Db {
 	    transacCount = 1000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp2(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp2(transacCount, utilDb, pok, pok1));
 	    transacCount = 10000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp2(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp2(transacCount, utilDb, pok, pok1));
 	    transacCount = 100000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp2(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp2(transacCount, utilDb, pok, pok1));
 	    
 	    
 	    
@@ -181,15 +181,15 @@ public class Main extends Db {
 	    transacCount = 1000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp3(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp3(transacCount, utilDb, pok, pok1));
 	    transacCount = 10000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp3(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp3(transacCount, utilDb, pok, pok1));
 	    transacCount = 100000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp3(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp3(transacCount, utilDb, pok, pok1));
 	    
 	    
 	    
@@ -213,17 +213,20 @@ public class Main extends Db {
 	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+expN+".csv";
 	    
 	    transacCount = 1000;
+	    
+	    //utilDb.populate(em, pok, transacCount/2);
+	    
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp4(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp4(transacCount, utilDb, pok, pok1));
 	    transacCount = 10000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp4(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp4(transacCount, utilDb, pok, pok1));
 	    transacCount = 100000;
 	    System.out.println("Transações: " + transacCount);
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp4(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp4(transacCount, utilDb, pok, pok1));
 	    
 	    
 	    
@@ -252,14 +255,14 @@ public class Main extends Db {
 //	    em.getTransaction().commit();
 //	}
 	
-	public static void versionTransCountCsv() throws IOException {
+	public static void versionTransCountCsv() throws IOException, InterruptedException {
 		ArrayList<Integer> listaInt = new ArrayList<Integer>();
 		MyCounter counter = new MyCounter();
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		EntityManager em = emf.createEntityManager();
 		
-		UtilDb utilDb = new UtilDb();
+		UtilDb utilDb = new UtilDb(emf);
 		
 		final Pokemon pok = new Pokemon(null, "Ivysaur");
 		final Pokemon pok1 = new Pokemon(null, "Venusaur");
@@ -318,7 +321,7 @@ public class Main extends Db {
 	    //1000
 	    String expN = "1000";
 	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+expN+".csv";
-	    String[] headerAux = {"Exp1", "Exp2", "Exp3", "Exp3"};
+	    String[] headerAux = {"Exp1", "Exp2", "Exp3", "Exp4"};
 	    listDataSet.add(headerAux);
 	    
 	    //utilDb.saveToCsv(listDataSet, csvPath, true);
@@ -334,26 +337,34 @@ public class Main extends Db {
 	    //executeDropTable("pokemon",em);
 	    //executeDropTable("pokemon", em);
 	    transacCount = 1000;
+	    
+	    
+	    
 	    System.out.println("Transações: " + transacCount);
+	    Db.executeDropTable("pokemon");
+	    utilDb.populate(em, pok, transacCount/2);
 	    
 	    System.out.println("Exp1:");
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    
-	    timesExp1.add(avgExp1(transacCount, utilDb, em, pok, pok1));
-	    
+	    //TimeUnit.Seconds.sleep(15);
+
+	    timesExp1.add(avgExp1(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
 	    
 	    System.out.println("Exp2:");
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp2(transacCount, utilDb, em, pok, pok1));
-	    
+	    timesExp1.add(avgExp2(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
 	    
 	    System.out.println("Exp3:");
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp3(transacCount, utilDb, em, pok, pok1));
-	    
+	    timesExp1.add(avgExp3(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
 	    System.out.println("Exp4:");
 	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
-	    timesExp1.add(avgExp4(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp4(transacCount, utilDb, pok, pok1));
 	    
 	    
 	    
@@ -378,8 +389,105 @@ public class Main extends Db {
 	    
 	    
 	    
+	    listDataSet.removeAll(listDataSet);
+	    timesExp1.removeAll(timesExp1);
+	    //10000 Transações
+	    transacCount = 10000;
+	    
+	    System.out.println("Transações: " + transacCount);
+	    Db.executeDropTable("pokemon");
+	    utilDb.populate(em, pok, transacCount/2);
+	    
+	    System.out.println("Exp1:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
+	    timesExp1.add(avgExp1(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+	    
+	    System.out.println("Exp2:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp2(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
+	    
+	    System.out.println("Exp3:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp3(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
+	    System.out.println("Exp4:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp4(transacCount, utilDb, pok, pok1));
 	    
 	    
+	    
+	    
+	    timesRecord1 = new String[timesExp1.size()];
+
+	    for(int i = 0; i < timesExp1.size(); i++) {
+	    	timesRecord1[i] = timesExp1.get(i).toString();
+	    }
+	    
+	    listDataSet.add(headerAux);
+	    listDataSet.add(timesRecord1);
+	    
+	    
+	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+transacCount+".csv";
+	    
+	    utilDb.saveToCsv(listDataSet, csvPath, true);
+	    System.out.println("ListaTimes: " + timesExp1);
+	    
+	    listDataSet.removeAll(listDataSet);
+	    timesExp1.removeAll(timesExp1);
+	    //100000 Transações
+	    transacCount = 100000;
+	    
+	    
+	    
+	    System.out.println("Transações: " + transacCount);
+	    Db.executeDropTable("pokemon");
+	    utilDb.populate(em, pok, transacCount/2);
+	    
+	    System.out.println("Exp1:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
+	    timesExp1.add(avgExp1(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+	    
+	    System.out.println("Exp2:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp2(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
+	    
+	    System.out.println("Exp3:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp3(transacCount, utilDb, pok, pok1));
+	    //TimeUnit.Seconds.sleep(15);
+
+	    System.out.println("Exp4:");
+	    //System.out.println("Avg:"+avgExp1(transacCount, utilDb, em, pok, pok1));
+	    timesExp1.add(avgExp4(transacCount, utilDb, pok, pok1));
+	    
+	    
+	    
+	    
+	    timesRecord1 = new String[timesExp1.size()];
+
+	    for(int i = 0; i < timesExp1.size(); i++) {
+	    	timesRecord1[i] = timesExp1.get(i).toString();
+	    }
+	    
+	    listDataSet.add(headerAux);
+	    listDataSet.add(timesRecord1);
+	    
+	    
+	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+transacCount+".csv";
+	    
+	    utilDb.saveToCsv(listDataSet, csvPath, true);
+	    System.out.println("ListaTimes: " + timesExp1);
 	    
 //	    timesExp1.removeAll(timesExp1);
 //	    //10000
@@ -463,9 +571,9 @@ public class Main extends Db {
 	}
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {
 		
-		versionExpCsv();
+		//versionExpCsv();
 		
-		//versionTransCountCsv(); 
+		versionTransCountCsv(); 
 		//executeDropTable();
 	    
 //	    String[] timesRecord = new String[timesExp1.size()];
