@@ -341,7 +341,7 @@ public class Main extends Db {
 	    
 	    
 	    System.out.println("Transações: " + transacCount);
-	    Db.executeDropTable("pokemon");
+	    //Db.executeDropTable("pokemon");
 	    utilDb.populate(em, pok, transacCount/2);
 	    
 	    System.out.println("Exp1:");
@@ -395,7 +395,7 @@ public class Main extends Db {
 	    transacCount = 10000;
 	    
 	    System.out.println("Transações: " + transacCount);
-	    Db.executeDropTable("pokemon");
+	    //Db.executeDropTable("pokemon");
 	    utilDb.populate(em, pok, transacCount/2);
 	    
 	    System.out.println("Exp1:");
@@ -446,7 +446,7 @@ public class Main extends Db {
 	    
 	    
 	    System.out.println("Transações: " + transacCount);
-	    Db.executeDropTable("pokemon");
+	    //Db.executeDropTable("pokemon");
 	    utilDb.populate(em, pok, transacCount/2);
 	    
 	    System.out.println("Exp1:");
@@ -489,84 +489,7 @@ public class Main extends Db {
 	    utilDb.saveToCsv(listDataSet, csvPath, true);
 	    System.out.println("ListaTimes: " + timesExp1);
 	    
-//	    timesExp1.removeAll(timesExp1);
-//	    //10000
-//	    transacCount = 10000;
-//	    System.out.println("Transações: " + transacCount);
-//	    
-//	    System.out.println("Exp1:");
-//	    timesExp1.add(avgExp1(transacCount, utilDb, em, pok, pok1));	    
-//	    
-//	    System.out.println("Exp2:");
-//	    timesExp1.add(avgExp2(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    
-//	    System.out.println("Exp3:");
-//	    timesExp1.add(avgExp3(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    System.out.println("Exp4:");
-//	    timesExp1.add(avgExp4(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    
-//	    
-//	    
-//	    timesRecord1 = new String[timesExp1.size()];
-//
-//	    for(int i = 0; i < timesExp1.size(); i++) {
-//	    	timesRecord1[i] = timesExp1.get(i).toString();
-//	    }
-//	    
-//	    listDataSet.add(timesRecord1);
-//	    
-//	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+transacCount+".csv";
-//
-//	    utilDb.saveToCsv(listDataSet, csvPath, true);
-//	    System.out.println("ListaTimes: " + timesExp1);	    
-//	    
-//	    
-//	    
-//	    
-//	    
-//	    timesExp1.removeAll(timesExp1);
-//	    //100000
-//	    transacCount = 100000;
-//	    System.out.println("Transações: " + transacCount);
-//	    
-//	    System.out.println("Exp1:");
-//	    timesExp1.add(avgExp1(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    
-//	    System.out.println("Exp2:");
-//	    timesExp1.add(avgExp2(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    
-//	    System.out.println("Exp3:");
-//	    timesExp1.add(avgExp3(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    System.out.println("Exp4:");
-//	    timesExp1.add(avgExp4(transacCount, utilDb, em, pok, pok1));
-//	    
-//	    
-//	    
-//	    
-//	    timesRecord1 = new String[timesExp1.size()];
-//
-//	    for(int i = 0; i < timesExp1.size(); i++) {
-//	    	timesRecord1[i] = timesExp1.get(i).toString();
-//	    }
-//	    
-//	    listDataSet.add(timesRecord1);
-//	    
-//	    
-//	    csvPath = "E:\\Downloads\\U-20220828T191257Z-001\\U\\bd2\\timesCSV\\"+transacCount+".csv";
-//
-//	    utilDb.saveToCsv(listDataSet, csvPath, true);
-//	    System.out.println("ListaTimes: " + timesExp1);
-//	    
-//	    
-//	    timesExp1.removeAll(timesExp1);
-//	    
-//	    
+
 		
 	}
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {

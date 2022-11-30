@@ -107,14 +107,15 @@ public class UtilDb {
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
 			
 			EntityManager em = this.emf.createEntityManager();
+			
+
+		
+			em.getTransaction().begin();
 			Pokemon pokAux = em.find(Pokemon.class, i);
 			String nameAux = "";
 			nameAux = name + i;
 			
 			pokAux.setName(nameAux);
-
-		
-			em.getTransaction().begin();
 			
 			em.persist(pokAux);
 			//System.out.println("Salvando sem lock: "+ nameAux +"\n");
@@ -219,9 +220,9 @@ public class UtilDb {
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
-		
+		System.out.println("Lendo Compartilhado:?????? \n");
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-			
+			//System.out.println("Lendo Compartilhado:?????? \n");
 			EntityManager em = this.emf.createEntityManager();
 			
 			//String nameAux = "";
@@ -231,7 +232,7 @@ public class UtilDb {
 		
 			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
 
-			
+			//System.out.println("Lendo Compartilhado: "+ pokAux.getName() +"\n");
 			
 			em.getTransaction().commit();
 			
@@ -335,18 +336,18 @@ public class UtilDb {
 		
 	//Search Shared PESSIMISTIC_READ
 	//Busca varios
-		public void searchSharedLock(EntityManager em, Pokemon pok, int amount) {
-			String name = pok.getName();
-			
-			for(int i = 1; i<amount +1; i++) {
-				
-				Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
-				//Configurar query
-				//https://www.baeldung.com/jpa-pessimistic-locking#:~:text=There%20are%20two%20types%20of,to%20have%20an%20exclusive%20lock.
-				pokAux.setName(name + i);
-			}
-		}
-	
+//		public void searchSharedLock(EntityManager em, Pokemon pok, int amount) {
+//			String name = pok.getName();
+//			
+//			for(int i = 1; i<amount +1; i++) {
+//				
+//				Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
+//				//Configurar query
+//				//https://www.baeldung.com/jpa-pessimistic-locking#:~:text=There%20are%20two%20types%20of,to%20have%20an%20exclusive%20lock.
+//				pokAux.setName(name + i);
+//			}
+//		}
+//	
 	
 	//Update Exclusive PESSIMISTIC_WRITE
 //	public void updateExclusiveLock(EntityManager em, Pokemon pok, int amount) {
@@ -359,22 +360,22 @@ public class UtilDb {
 //		}
 //	}
 		
-	public void updateExclusiveLock(EntityManager em, Pokemon pok, int amount) {
-		String name = pok.getName();
-		for(int i = 1; i<amount +1; i++) {
-			
-			em.getTransaction().begin(); 
-			
-			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_WRITE);
-			
-			//em.lock(pok, LockModeType.PESSIMISTIC_WRITE);
-			em.persist(pok);
-			
-			em.getTransaction().commit();
-			pokAux.setName(name + i);
-			
-		}
-	}
+//	public void updateExclusiveLock(EntityManager em, Pokemon pok, int amount) {
+//		String name = pok.getName();
+//		for(int i = 1; i<amount +1; i++) {
+//			
+//			em.getTransaction().begin(); 
+//			
+//			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_WRITE);
+//			
+//			//em.lock(pok, LockModeType.PESSIMISTIC_WRITE);
+//			em.persist(pok);
+//			
+//			em.getTransaction().commit();
+//			pokAux.setName(name + i);
+//			
+//		}
+//	}
 	
 	public void salvarExclusiveLock(EntityManager em, Pokemon pok) {
 		em.getTransaction().begin();

@@ -28,15 +28,15 @@ public class Db {
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
-	    Future<?> futureTask = threadpool.submit(() -> System.out.println("HI"));
+	    Future<?> futureTask = threadpool.submit(() -> System.out.println("Começando expPasso1"));
 	    long startTime = System.nanoTime();
-		for (int i = 1; i<Threads; i++) {
+		for (int i = 0; i<Threads; i++) {
 	    	//futureTask = threadpool.submit(() ->  utilDb.update(em, pok1, 10));
 	    	//Primeiro Nivel(100% das trans pedem shared lock)
 	    	//Consulta
 	    	futureTask = threadpool.submit(() ->  utilDb.buscaShared(pok1, transacCount/2));
 	    	//Escrita
-	    	futureTask = threadpool.submit(() ->  utilDb.updateShared(pok1, transacCount/2));
+	    	//futureTask = threadpool.submit(() ->  utilDb.updateShared(pok1, transacCount/2));
 	    }
 		while (!futureTask.isDone()) {
 	    	//System.out.println("ExpPasso1 is not finished yet..."); 
@@ -61,9 +61,9 @@ public class Db {
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
-	    Future<?> futureTask = threadpool.submit(() -> System.out.println("HI"));
+	    Future<?> futureTask = threadpool.submit(() -> System.out.println("Começando expPasso2"));
 	    long startTime = System.nanoTime();
-	    for (int i = 1; i<Threads; i++) {
+	    for (int i = 0; i<Threads; i++) {
 	    	
 	    	//Segundo Nivel(Só trans de leitura pedem shared lock)
 	    	//Consulta
@@ -94,9 +94,9 @@ public class Db {
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
-	    Future<?> futureTask = threadpool.submit(() -> System.out.println("HI"));
+	    Future<?> futureTask = threadpool.submit(() -> System.out.println("Começando expPasso3"));
 	    long startTime = System.nanoTime();
-	    for (int i = 1; i<Threads; i++) {
+	    for (int i = 0; i<Threads; i++) {
 	    	
 	    	//Terceiro Nivel(Só trans de escrita pedem exclusive lock)
 	    	//Consulta
@@ -127,9 +127,9 @@ public class Db {
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
 	    //threadpool.awaitTermination(1, TimeUnit.SECONDS);
-	    Future<?> futureTask = threadpool.submit(() -> System.out.println("HI"));
+	    Future<?> futureTask = threadpool.submit(() -> System.out.println("Começando expPasso4"));
 	    long startTime = System.nanoTime();
-	    for (int i = 1; i<Threads; i++) {
+	    for (int i = 0; i<Threads; i++) {
 	    	
 	    	//Quarto Nivel(Só todas trans de escrita pedem exclusive lock 
 	    	//e todas as trans de leitura pedem shared lock)
