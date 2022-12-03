@@ -1,1 +1,1 @@
-# DBlocks
+Este relatório descreve como foi desenvolvido um experimento utilizando travas com JPA. O estilo a ser utilizado no projeto é o padrão de projeto JAVA. Existem muitas situações em que queremos recuperar dados de um banco de dados. Às vezes, queremos bloqueá-lo para processamento posterior, para que ninguém mais possa interromper nossas ações. Este experimento mostra dois controles de controle de simultaneidade que nos permitem fazer isso: definir o nível apropriado de isolamento da transação ou definir um bloqueio nos dados que precisam dele no momento.
