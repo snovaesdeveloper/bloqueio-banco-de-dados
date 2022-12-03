@@ -1,29 +1,24 @@
 package app;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
 //Talvez randomizar os i's dos for's para buscas e atualizações
-import javax.persistence.Query;
 
 //Export exec times to CSV
-import com.opencsv.CSVWriter;
+
 
 public class Db {
-	public static long expPasso1(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
+	public static long expPasso1(UtilDb utilDb, Pessoa pok1, Integer transacCount) throws InterruptedException, ExecutionException {
 		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -56,7 +51,7 @@ public class Db {
 	    return duration;
 	}
 	
-	public static long expPasso2(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
+	public static long expPasso2(UtilDb utilDb, Pessoa pok1, Integer transacCount) throws InterruptedException, ExecutionException {
 		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -89,7 +84,7 @@ public class Db {
 	    
 	}
 	
-	public static long expPasso3(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
+	public static long expPasso3(UtilDb utilDb, Pessoa pok1, Integer transacCount) throws InterruptedException, ExecutionException {
 		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -122,7 +117,7 @@ public class Db {
 	    return duration;
 	}
 	
-	public static long expPasso4(UtilDb utilDb, Pokemon pok1, Integer transacCount) throws InterruptedException, ExecutionException {
+	public static long expPasso4(UtilDb utilDb, Pessoa pok1, Integer transacCount) throws InterruptedException, ExecutionException {
 		int Threads = 1;
 		long duration = 0;
 	    ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -174,7 +169,7 @@ public class Db {
 	    emf.close();
 	}
 	//Retorna a media dos experimentos
-	public static double avgExp1(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
+	public static double avgExp1(int transacCount, UtilDb utilDb, Pessoa pok, Pessoa pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
 		//executeDropTable("pokemon");
 	    //utilDb.populate(em, pok, transacCount/2);
@@ -204,7 +199,7 @@ public class Db {
 	    
 	}
 	
-	public static double avgExp2(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
+	public static double avgExp2(int transacCount, UtilDb utilDb, Pessoa pok, Pessoa pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
 		//executeDropTable("pokemon");
 	    //utilDb.populate(em, pok, transacCount/2);
@@ -234,7 +229,7 @@ public class Db {
 	    
 	}
 	
-	public static double avgExp3(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
+	public static double avgExp3(int transacCount, UtilDb utilDb, Pessoa pok, Pessoa pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
 		//executeDropTable("pokemon");
 	    //utilDb.populate(em, pok, transacCount/2);
@@ -264,7 +259,7 @@ public class Db {
 	    
 	}
 	
-	public static double avgExp4(int transacCount, UtilDb utilDb, Pokemon pok, Pokemon pok1) {
+	public static double avgExp4(int transacCount, UtilDb utilDb, Pessoa pok, Pessoa pok1) {
 		ArrayList<Long> timesExp = new ArrayList<Long>();
 		//executeDropTable("pokemon");
 	    //utilDb.populate(em, pok, transacCount/2);

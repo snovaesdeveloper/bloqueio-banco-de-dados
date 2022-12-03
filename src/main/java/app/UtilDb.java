@@ -1,20 +1,13 @@
 package app;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 
 //CSV
@@ -43,63 +36,20 @@ public class UtilDb {
 	}
 	
 	//Popula em varias transacoes (id nao automatico, tem q fzr uma nova base)
-	public void populate(EntityManager em, Pokemon pok, int amount) {
+	public void populate(EntityManager em, Pessoa pok, int amount) {
 		//Pokemon pok = new Pokemon(null, "Gengar");
 		System.out.println("Populando Db com: "+ amount+"\n");
 		for(int i = 0; i<amount; i++) {
-			Pokemon pokAux = new Pokemon(null, pok.getName());
+			Pessoa pokAux = new Pessoa(null, pok.getName());
 			
 			pokAux.setName(pokAux.getName() + i);
 			this.salvar(em, pokAux);
 			
 		}
 	}
-	
-	//Tentar faz com id automatico
-//	public void populate(EntityManager em, Pokemon pok, int amount) {
-//		//Pokemon pok = new Pokemon(null, "Gengar");
-//		String Name = pok.getName();
-//		
-//		for(int i = 0; i<amount; i++) {
-//			pok.setName(Name + i);
-//			this.salvar(em,pok);
-//			pok.setName(Name);
-//		}
-//	}
-	
 
-	
-	//Sem Lock
-	//Atualiza em varias transacoes sem lock
-//	public void update(EntityManager em, Pokemon pok, int amount) {
-//		String name = pok.getName();
-//		for(int i = 1; i<amount +1; i++) {
-//			 
-//			Pokemon pokAux = em.find(Pokemon.class, i);
-//			pokAux.setName(name + i);
-//			this.salvar(em, pokAux);
-//			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
-//			
-//			//Fechar Conexão para evitar gargalo nas conexões
-//			em.close();
-//	       
-//		}
-//	}
-//	public void update3(Pokemon pok, int amount) {
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-//		String name = pok.getName();
-//		for(int i = 1; i<amount +1; i++) {
-//			//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
-//			EntityManager em = emf.createEntityManager();
-//			 
-//			Pokemon pokAux = em.find(Pokemon.class, i);
-//			pokAux.setName(name + i);
-//			this.salvar(em, pokAux);
-//			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
-//		}
-//	}
 	//sem lock
-	public void update(Pokemon pok, int amount) {
+	public void update(Pessoa pok, int amount) {
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
@@ -111,7 +61,7 @@ public class UtilDb {
 
 		
 			em.getTransaction().begin();
-			Pokemon pokAux = em.find(Pokemon.class, i);
+			Pessoa pokAux = em.find(Pessoa.class, i);
 			String nameAux = "";
 			nameAux = name + i;
 			
@@ -127,7 +77,7 @@ public class UtilDb {
 		//emf.close();
 	}
 	//com lock
-	public void updateExclusive(Pokemon pok, int amount) {
+	public void updateExclusive(Pessoa pok, int amount) {
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
@@ -137,7 +87,7 @@ public class UtilDb {
 			String nameAux = "";
 			
 			em.getTransaction().begin();
-			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_WRITE);
+			Pessoa pokAux = em.find(Pessoa.class, i, LockModeType.PESSIMISTIC_WRITE);
 			nameAux = name + i;
 
 			pokAux.setName(nameAux);
@@ -157,7 +107,7 @@ public class UtilDb {
 	}
 	
 	//Pode isso? (escrita pedir shared)
-	public void updateShared(Pokemon pok, int amount) {
+	public void updateShared(Pessoa pok, int amount) {
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
@@ -169,7 +119,7 @@ public class UtilDb {
 			
 
 			em.getTransaction().begin();
-			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
+			Pessoa pokAux = em.find(Pessoa.class, i, LockModeType.PESSIMISTIC_READ);
 			nameAux = name + i;
 			//Add isso em todos
 			if(pokAux != null) {
@@ -191,7 +141,7 @@ public class UtilDb {
 		//emf.close();
 	}
 	//Sem lock
-	public void busca(Pokemon pok, int amount) {
+	public void busca(Pessoa pok, int amount) {
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");		
 		
 		IntStream.range(1,amount).boxed().parallel().forEach(i->{
@@ -202,7 +152,7 @@ public class UtilDb {
 			
 			em.getTransaction().begin();
 			
-			Pokemon pokAux = em.find(Pokemon.class, i);
+			Pessoa pokAux = em.find(Pessoa.class, i);
 
 			//System.out.println("Lendo sem lock: "+ pokAux.getName() +"\n");
 			em.getTransaction().commit();
@@ -216,7 +166,7 @@ public class UtilDb {
 		//emf.close();
 	}
 	//Com lock
-	public void buscaShared(Pokemon pok, int amount) {
+	public void buscaShared(Pessoa pok, int amount) {
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		String name = pok.getName();
 		
@@ -230,7 +180,7 @@ public class UtilDb {
 
 			em.getTransaction().begin();
 		
-			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
+			Pessoa pokAux = em.find(Pessoa.class, i, LockModeType.PESSIMISTIC_READ);
 
 			//System.out.println("Lendo Compartilhado: "+ pokAux.getName() +"\n");
 			
@@ -247,137 +197,34 @@ public class UtilDb {
 		//emf.close();
 	}
 	
-	//Teste sem o salvar()!!funcionando paralelo!!
-//	@SuppressWarnings("unchecked")
-//	public void update2(EntityManager em, Pokemon pok, int amount) {
-//		String name = pok.getName();
-//		//String nameAux = "";
-//		//ArrayList<Integer> list = new ArrayList<>();
-//		
-//		IntStream.range(1,amount).boxed().parallel().forEach(i->{
-//			//HibernateSessio
-//			Pokemon pokAux = em.find(Pokemon.class, i);
-//			String nameAux = "";
-//			nameAux = name + i;
-//			//nameAux = "AAAAAAhhhhh";
-//			pokAux.setName(nameAux);
-////			if(!em.getTransaction().isActive())
-////		        em.getTransaction().begin();
-////			em.persist(pokAux);
-////			em.getTransaction().commit();
-////			em.close();
-////			
-//			em.getTransaction().begin();
-//			
-//			em.persist(pokAux);
-//			em.getTransaction().commit();
-//	        // flush em - save to DB
-//	        //em.flush();
-//			//System.out.println("Salvando: "+ pokAux.getName()+"\n");
-//			
-//			System.out.println("Salvando: "+ nameAux +"\n");
-//			
-//		});
-////		for(int i = 1; i<amount +1; i++) {
-////			
-////			Pokemon pokAux = em.find(Pokemon.class, i);
-////			pokAux.setName(name + i);
-////			em.getTransaction().begin();
-////			em.persist(pokAux);
-////			System.out.println("Salvando: "+ pokAux.getName()+"\n");
-////			em.getTransaction().commit();
-////			
-////		}
-//	}
+
 	
 	public void salvar2(EntityManager em, Integer i) {
 		em.getTransaction().begin();
-		Pokemon pokAux = em.find(Pokemon.class, i);
+		Pessoa pokAux = em.find(Pessoa.class, i);
 		em.persist(pokAux);
 		em.getTransaction().commit();
 	}
 	
 	//Salvar sem lock
-	public void salvar(EntityManager em, Pokemon pok) {
+	public void salvar(EntityManager em, Pessoa pok) {
 		em.getTransaction().begin();
 		em.persist(pok);
 		em.getTransaction().commit();
 	}
 	
 	//Busca sem lock
-	public void search(EntityManager em, Pokemon pok, int amount) {
+	public void search(EntityManager em, Pessoa pok, int amount) {
 		String name = pok.getName();
 		for(int i = 1; i<amount +1; i++) {
 			
-			Pokemon pokAux = em.find(Pokemon.class, i);
+			Pessoa pokAux = em.find(Pessoa.class, i);
 			pokAux.setName(name + i);
 		}
 	}
-	
 
-		
-	//Com lock
-	//Shared
-//	public void updateSharedLock(EntityManager em, Pokemon pok, int amount) {
-//		String name = pok.getName();
-//		for(int i = 1; i<amount +1; i++) {
-//			 
-//			Pokemon pokAux = em.find(Pokemon.class, i);
-//			pokAux.setName(name + i);
-//			this.salvar(em, pokAux);
-//		}
-//	}
-//	public void salvarSharedLock(EntityManager em, Pokemon pok) {
-//		em.getTransaction().begin();
-//		em.lock(pok, LockModeType.PESSIMISTIC_WRITE);
-//		em.persist(pok);
-//		em.getTransaction().commit();
-//	}
-		
-	//Search Shared PESSIMISTIC_READ
-	//Busca varios
-//		public void searchSharedLock(EntityManager em, Pokemon pok, int amount) {
-//			String name = pok.getName();
-//			
-//			for(int i = 1; i<amount +1; i++) {
-//				
-//				Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_READ);
-//				//Configurar query
-//				//https://www.baeldung.com/jpa-pessimistic-locking#:~:text=There%20are%20two%20types%20of,to%20have%20an%20exclusive%20lock.
-//				pokAux.setName(name + i);
-//			}
-//		}
-//	
 	
-	//Update Exclusive PESSIMISTIC_WRITE
-//	public void updateExclusiveLock(EntityManager em, Pokemon pok, int amount) {
-//		String name = pok.getName();
-//		for(int i = 1; i<amount +1; i++) {
-//			 
-//			Pokemon pokAux = em.find(Pokemon.class, i);
-//			pokAux.setName(name + i);
-//			this.salvarExclusiveLock(em, pokAux);
-//		}
-//	}
-		
-//	public void updateExclusiveLock(EntityManager em, Pokemon pok, int amount) {
-//		String name = pok.getName();
-//		for(int i = 1; i<amount +1; i++) {
-//			
-//			em.getTransaction().begin(); 
-//			
-//			Pokemon pokAux = em.find(Pokemon.class, i, LockModeType.PESSIMISTIC_WRITE);
-//			
-//			//em.lock(pok, LockModeType.PESSIMISTIC_WRITE);
-//			em.persist(pok);
-//			
-//			em.getTransaction().commit();
-//			pokAux.setName(name + i);
-//			
-//		}
-//	}
-	
-	public void salvarExclusiveLock(EntityManager em, Pokemon pok) {
+	public void salvarExclusiveLock(EntityManager em, Pessoa pok) {
 		em.getTransaction().begin();
 		em.lock(pok, LockModeType.PESSIMISTIC_WRITE);
 		em.persist(pok);

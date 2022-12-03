@@ -1,8 +1,6 @@
 package app;
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +8,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Pokemon implements Serializable{
+public class Pessoa implements Serializable{
 		private static final long serialVersionUID = 1L;
 		
 		@Id
@@ -34,7 +32,7 @@ public class Pokemon implements Serializable{
 
 
 	  // public empty constructor needed for retrieving the POJO
-	  public Pokemon() {
+	  public Pessoa() {
 	  }
 	  
 	 
@@ -51,7 +49,7 @@ public class Pokemon implements Serializable{
 //	    
 //	  }
 	  
-	  public Pokemon(Integer id, String name) {
+	  public Pessoa(Integer id, String name) {
 		    //this.id = number;
 		  	super();
 		    this.id = id;

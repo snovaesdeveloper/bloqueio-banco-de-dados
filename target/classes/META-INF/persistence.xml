@@ -17,7 +17,7 @@
 		<property name="hibernate.hbm2ddl.auto" value="update" />
 
 		<!-- https://docs.jboss.org/hibernate/orm/5.4/javadocs/org/hibernate/dialect/package-summary.html -->
-		<property name="hibernate.dialect" 	value="org.hibernate.dialect.MariaDBDialect" />
+		<property name="hibernate.dialect" 	value="org.hibernate.dialect.MySQL8Dialect" />
 		<property name="connection.pool_size" value="1000000000" />
 		<property name="hibernate.connection.pool_size" value="1000000000" />
 		

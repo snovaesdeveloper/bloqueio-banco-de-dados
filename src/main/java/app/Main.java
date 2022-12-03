@@ -1,5 +1,4 @@
 package app;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalTime;
 
@@ -7,21 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
 //Talvez randomizar os i's dos for's para buscas e atualizações
-import javax.persistence.Query;
-import javax.transaction.Transactional;
 
 //Export exec times to CSV
-import com.opencsv.CSVWriter;
+
 
 public class Main extends Db {
 	
@@ -34,8 +26,8 @@ public class Main extends Db {
 		
 		UtilDb utilDb = new UtilDb();
 		
-		final Pokemon pok = new Pokemon(null, "Ivysaur");
-		final Pokemon pok1 = new Pokemon(null, "Venusaur");
+		final Pessoa pok = new Pessoa(null, "Ivysaur");
+		final Pessoa pok1 = new Pessoa(null, "Venusaur");
 		
 		//Na verdade 1000 transações são 500 + 500 e não 1 até 499 e 500 até 1000
 		//Então só precisa de 500 para 100 transações por exemplo
@@ -243,17 +235,7 @@ public class Main extends Db {
 		
 		
 	}
-	//@Transactional
-//	public static void executeDropTable(String tableName, EntityManager em){
-//		
-//		System.out.println("Dropando: " + tableName);
-//	    String query = "DROP TABLE pokemon";
-//		//String query = " DELETE FROM `pokemon` WHERE `pokemon`.`id` = 1;";
-//	    em.getTransaction().begin();
-//	    em.createNativeQuery(query).executeUpdate();
-//	    
-//	    em.getTransaction().commit();
-//	}
+
 	
 	public static void versionTransCountCsv() throws IOException, InterruptedException {
 		ArrayList<Integer> listaInt = new ArrayList<Integer>();
@@ -264,8 +246,8 @@ public class Main extends Db {
 		
 		UtilDb utilDb = new UtilDb(emf);
 		
-		final Pokemon pok = new Pokemon(null, "Ivysaur");
-		final Pokemon pok1 = new Pokemon(null, "Venusaur");
+		final Pessoa pok = new Pessoa(null, "Ivysaur");
+		final Pessoa pok1 = new Pessoa(null, "Venusaur");
 		
 		//Na verdade 1000 transações são 500 + 500 e não 1 até 499 e 500 até 1000
 		//Então só precisa de 500 para 100 transações por exemplo
